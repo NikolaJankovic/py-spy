@@ -9,6 +9,7 @@ pub struct Config {
 
     pub dump: bool,
     pub flame_file_name: Option<String>,
+    pub serve: bool,
 
     pub non_blocking: bool,
     pub show_line_numbers: bool,
@@ -44,6 +45,9 @@ impl Config {
             .arg(Arg::with_name("dump")
                 .long("dump")
                 .help("Dump the current stack traces to stdout"))
+	    .arg(Arg::with_name("serve")
+		.long("serve")
+		.help("Start up a web server for interactive results"))
             .arg(Arg::with_name("nonblocking")
                 .long("nonblocking")
                 .help("Don't pause the python process when collecting samples. Setting this option will reduce \
@@ -84,6 +88,7 @@ impl Config {
         // what to generate
         let flame_file_name = matches.value_of("flame").map(|f| f.to_owned());
         let dump = matches.occurrences_of("dump") > 0;
+        let serve = matches.occurrences_of("serve") > 0;
 
         // how to sample
         let sampling_rate = value_t!(matches, "rate", u64)?;
@@ -99,6 +104,6 @@ impl Config {
 
         Ok(Config{pid, python_program, dump, flame_file_name,
                   sampling_rate, duration,
-                  show_line_numbers, non_blocking, native})
+                  show_line_numbers, non_blocking, serve, native})
     }
 }

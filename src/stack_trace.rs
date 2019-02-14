@@ -6,16 +6,17 @@ use read_process_memory::{CopyAddress, copy_address};
 use python_interpreters::{InterpreterState, ThreadState, FrameObject, CodeObject, StringObject, BytesObject};
 use utils::{copy_pointer};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize)]
 pub struct StackTrace {
     pub thread_id: u64,
+    #[serde(skip_serializing)]
     pub os_thread_id: Option<::remoteprocess::Tid>,
     pub active: bool,
     pub owns_gil: bool,
     pub frames: Vec<Frame>
 }
 
-#[derive(Debug, Hash, Eq, PartialEq, Ord, PartialOrd, Clone)]
+#[derive(Debug, Hash, Eq, PartialEq, Ord, PartialOrd, Clone, Serialize)]
 pub struct Frame {
     pub name: String,
     pub filename: String,
